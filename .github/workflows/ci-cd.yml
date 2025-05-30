@@ -71,15 +71,15 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
     
-    # - name: Install Flyctl
-    #   uses: superfly/flyctl-actions/setup-flyctl@master
+    - name: Install Flyctl
+      uses: superfly/flyctl-actions/setup-flyctl@master
       
-    # - name: Deploy to Fly.io
-    #   run: |
-    #     if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-    #       flyctl deploy --remote-only --config fly.toml --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ steps.short_sha.outputs.sha_short }}
-    #     else
-    #       flyctl deploy --remote-only --config fly.staging.toml --image ${{ env.REGISTRY }}/${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ steps.short_sha.outputs.sha_short }}
-    #     fi
-    #   env:
-    #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} 
+    - name: Deploy to Fly.io
+      run: |
+        if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          flyctl deploy --remote-only --config fly.toml --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ steps.short_sha.outputs.sha_short }}
+        else
+          flyctl deploy --remote-only --config fly.dev.toml --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ steps.short_sha.outputs.sha_short }}
+        fi
+      env:
+        FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} 
