@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from typing import List
 import os
 from dotenv import load_dotenv
-from data.seed import cocktails
 
 # Database setup
 load_dotenv()
@@ -26,26 +25,6 @@ class CocktailDB(Base):
 # Create tables
 Base.metadata.create_all(bind=engine)
 
-# Seed data
-def seed_database():
-    db = SessionLocal()
-    try:
-        # Check if database is empty
-        if db.query(CocktailDB).first() is None:
-            # Add cocktails to database
-            for cocktail_data in cocktails:
-                try:
-                    cocktail = CocktailDB(**cocktail_data)
-                    db.add(cocktail)
-                    db.commit()
-                except Exception as e:
-                    db.rollback()
-                    print(f"Error adding {cocktail_data['name']}: {str(e)}")
-    finally:
-        db.close()
-
-# Seed on startup
-seed_database()
 
 class CocktailBase(BaseModel):
     name: str
